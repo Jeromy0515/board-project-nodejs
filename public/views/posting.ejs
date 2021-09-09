@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+                crossorigin="anonymous"></script>
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
+        <style>
+            * {
+                font-family: 'Noto Sans KR', sans-serif;
+            }
+        </style>
+        <title>게시판</title>
+    </head>
+    <body>
+        <!-- navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">인공과 커뮤니티</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/notice">공지사항</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">내가쓴 글</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" name="loginPageBtn"
+                               href="login">로그인</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!--navbar-->
+        <div class="container" style="overflow: auto;" value="<%=board[0].board_id %>">
+
+            <div style="position: absolute;top: 100px;">
+                <h1 style="font-size: 65px;"><%= board[0].board_title%></h1>
+            </div>
+            <div style="position: absolute; top:200px;">
+                <textarea name="content" id="contentArea" cols="60" rows="25" readonly="true" style="resize: none;border: none;"><%=board[0].board_content %></textarea>
+            </div>
+
+            <div class="mb-3" style="position: absolute;top: 880px;padding: 0px 0px 100px">
+                <label for="replyTextarea" class="form-label"><%= reply.length %> Comments</label>
+                <textarea class="form-control w-75" id="replyTextarea" cols="80" rows="3" placeholder="댓글을 입력해주세요." style="resize: none;"></textarea>
+                <button type="button" onclick="sendReply(<%=board[0].board_id%>)" class="btn btn-primary" style="position: absolute; left: 440px;top: 150px;white-space: nowrap">보내기</button>
+            </div>
+                <% var top = 980;%>
+                <% for(let i = 0;i < reply.length;i++) { %>
+                    <div style="position: absolute;top: <%=top+=170;%>px">
+                        <label for="commentArea" class="form-label"><%=reply[i].user_name%></label>
+                        <textarea readonly disabled id="commentArea" class="form-control" cols="55" rows="3" style="resize: none;background-color: white;"><%=reply[i].reply_content %></textarea>
+                        <p class="text-end" style="font-size: 10px;color: lightgray"><%=new Date(reply[i].reply_date).toLocaleString() %></p>
+                    </div>
+                <% } %>
+            <div style="padding: 0px 0px 1650px">
+
+            </div>
+        </div>
+
+        <script src="http://localhost:3000/static/js/posting.js"></script>
+    </body>
+</html>
