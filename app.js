@@ -39,6 +39,12 @@ app.engine('html', ejs.renderFile);
 // get
 app.get('/', (req, res) => {
 
+    var cookies = {};
+    if(req.headers.cookie !== undefined){
+        cookies = cookie.parse(req.headers.cookie);
+        var id = decrypt(cookies.id_enc,"key");
+    }
+
     pool.getConnection((err,connection) => {
         if(err)
             throw err;
@@ -50,7 +56,10 @@ app.get('/', (req, res) => {
                 if(error)
                     throw error;
 
-                res.render('main.ejs',{data:results});
+                res.render('main.ejs',{
+                    data:results,
+                    cookie_id:id
+                });
 
             });
 
@@ -88,7 +97,6 @@ app.get('/writing', (req, res) => {
 
 app.get('/login', (req, res) => {
     res.render('login.ejs');
-
 
 });
 
@@ -137,7 +145,26 @@ app.get('/posting',(req,res)=>{
 
 });
 
+app.get('/mypost', (req, res) => {
+    const id = getIDFromCookie();
 
+    pool.getConnection((err,connection) => {
+        if(err)
+            throw err;
+
+        connection.query(`select * from board where user_id like ?`,[id],
+            (error,results) => {
+
+                if(error)
+                    throw error;
+
+                res.render('mypost.ejs',{data:results});
+
+            });
+
+    });
+
+});
 
 // post
 app.post('/',(req,res)=>{
@@ -154,7 +181,7 @@ app.post('/sign_up',(req,res) => {
         if(err)
             throw err;
 
-        connection.query(`insert into user values('${id}','${password}','${name}','${email}')`,
+        connection.query(`insert into user values('${id}','${encrypt(password,"key")}','${name}','${email}')`,
             (error,results) => {
 
                 if(error)
@@ -175,7 +202,7 @@ app.post('/writing',(req,res)=>{
     var cookies = {};
     if(req.headers.cookie !== undefined){
         cookies = cookie.parse(req.headers.cookie);
-        var id = cookies.hasLogin;
+        var id = decrypt(cookies.id_enc,"key");
     }
 
     pool.getConnection((err,connection) => {
@@ -206,16 +233,15 @@ app.post('/login',(req,res)=>{
 
         connection.query(`SELECT *
                           FROM USER
-                          WHERE USER_ID LIKE '${id}'
-                            AND USER_PW LIKE '${password}'`, (error, results,fields) => {
+                          WHERE USER_ID LIKE '${id}'`, (error, results,fields) => {
             if(error)
                 throw error;
 
-            if(results[0] == undefined){
+            if(results[0] == undefined || decrypt(results[0].user_pw,"key") != password){
                 console.log('로그인 실패!');
                 res.redirect('/login');
             }else{
-                res.cookie('hasLogin',id);
+                res.cookie('id_enc',encrypt(id,"key"));
                 res.redirect('/');
                 console.log(req.headers.cookie);
             }
@@ -290,7 +316,13 @@ app.post('/checkID',(req,res)=>{
 })
 
 app.post('/reply', (req, res) => {
-    const param = [req.body.reply_content,req.body.user_id,req.body.board_id];
+    var cookies = {};
+    if(req.headers.cookie !== undefined){
+        cookies = cookie.parse(req.headers.cookie);
+        var id = decrypt(cookies.id_enc,"key");
+    }
+
+    const param = [req.body.reply_content,id,req.body.board_id];
 
     pool.getConnection((err, connection) => {
         if(err)
@@ -299,7 +331,9 @@ app.post('/reply', (req, res) => {
         connection.query(`insert into reply values(0,?,now(),?,?)`, param,(error, results) => {
             if(error)
                 throw error;
+
             res.json({});
+
         });
     });
 });
@@ -324,6 +358,15 @@ var decrypt = function(text,key){
         console.log(err);
         return;
     }
+}
+
+function getIDFromCookie(){
+    var cookies = {};
+    if(req.headers.cookie !== undefined){
+        cookies = cookie.parse(req.headers.cookie);
+        return decrypt(cookies.id_enc,"key");
+    }
+    return null;
 }
 
 module.exports = app;

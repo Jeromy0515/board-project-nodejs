@@ -23,9 +23,6 @@
             justify-content: center;
         }
 
-        tr.posting:hover{
-            background-color: #41a2e7;
-        }
     </style>
     <title>게시판</title>
 </head>
@@ -67,29 +64,24 @@
         <table class="table">
             <thead>
             <tr>
-                <th scope="col">#</th>
+                <th scope="col">선택</th>
                 <th scope="col">제목</th>
                 <th scope="col">날짜</th>
                 <th scope="col">아이디</th>
             </tr>
             </thead>
             <tbody>
-            <% for (var i = 0; i < data.length; i++) { %>
-                <form>
-                <tr onclick="sendGETRequest(<%= data[i].board_id %>)" class="posting" id="<%= data.board_id %>" >
-                    <th scope="row"><%= i + 1 %></th>
-                    <td><%= data[i].board_title%></td>
-                    <td><%= new Date(data[i].board_date).toDateString() %></td>
-                    <td><%= data[i].user_name%></td>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
                 </tr>
-                </form>
-            <% } %>
             </tbody>
         </table>
-        <a class="btn btn-primary" style="float:right">글쓰기</a>
+        <a href="#" class="btn btn-light" style="float:right">삭제</a>
     </main>
 </div>
 <!-- main -->
-<script src="http://localhost:3000/static/js/main.js"></script>
 </body>
 </html>

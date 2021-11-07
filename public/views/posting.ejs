@@ -34,7 +34,7 @@
                             <a class="nav-link active" aria-current="page" href="/notice">공지사항</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">내가쓴 글</a>
+                            <a class="nav-link" href="/mypost">내가쓴 글</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav mr-auto">
@@ -53,7 +53,7 @@
                 <h1 style="font-size: 65px;"><%= board[0].board_title%></h1>
             </div>
             <div style="position: absolute; top:200px;">
-                <textarea name="content" id="contentArea" cols="60" rows="25" readonly="true" style="resize: none;border: none;"><%=board[0].board_content %></textarea>
+                <textarea name="content" id="contentArea" cols="150" rows="25" readonly="true" style="resize: none;border: none;"><%=board[0].board_content %></textarea>
             </div>
 
             <div class="mb-3" style="position: absolute;top: 880px;padding: 0px 0px 100px">

@@ -38,10 +38,8 @@ var sendReply = function(boardID){
     }
 
     const replyContent = container.getElementsByClassName('form-control')[0].value;
-    const userID = document.cookie.split('=')[1];
     const data = {
         'reply_content': replyContent,
-        'user_id': userID,
         'board_id': boardID
     }
 
