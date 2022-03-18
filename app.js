@@ -351,6 +351,7 @@ var encrypt = function(data,key){
 }
 
 
+
 var decrypt = function(text,key){
     try{
         const bytes = cryptoJS.AES.decrypt(text, key);
