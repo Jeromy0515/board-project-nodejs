@@ -350,8 +350,6 @@ var encrypt = function(data,key){
     return cryptoJS.AES.encrypt(JSON.stringify(data), key).toString();
 }
 
-
-
 var decrypt = function(text,key){
     try{
         const bytes = cryptoJS.AES.decrypt(text, key);
