@@ -152,7 +152,7 @@ app.get('/mypost', (req, res) => {
         if(err)
             throw err;
 
-        connection.query(`select * from board where user_id like ?`,[id],
+          connection.query(`select * from board where user_id like ?`,[id],
             (error,results) => {
 
                 if(error)
@@ -349,6 +349,7 @@ app.all('*', (req, res) => {
 var encrypt = function(data,key){
     return cryptoJS.AES.encrypt(JSON.stringify(data), key).toString();
 }
+
 
 var decrypt = function(text,key){
     try{
